@@ -1,0 +1,22 @@
+# Retrieval Evaluation & Experiment Configuration
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  dimension: 384
+  normalize: true
+
+retriever:
+  type: "faiss_index_flat_ip"
+  top_k_candidates: 10
+  k_eval_list: [3, 5, 10]
+
+query_construction:
+  strategy: "skills_and_summary" # options: "skills_and_summary", "raw_resume", "title_and_skills"
+  max_tokens: 256
+
+experiments:
+  chunking:
+    enabled: false # Job descriptions are stored whole (atomic document indexing)
+    document_level: "full_document"
+  hybrid:
+    dense_weight: 0.65
+    bm25_weight: 0.35

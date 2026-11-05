@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CareerConnectEvaluationCaseSchemas",
+  "description": "JSON Schemas for validating Golden Evaluation Datasets",
+  "definitions": {
+    "golden_job": {
+      "type": "object",
+      "required": ["job_id", "title", "company", "description", "required_skills", "minimum_experience_years", "seniority"],
+      "properties": {
+        "job_id": { "type": "string", "pattern": "^(L_)?JOB_[0-9A-Za-z_-]+$" },
+        "title": { "type": "string", "minLength": 2 },
+        "company": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string", "minLength": 20 },
+        "required_skills": { "type": "array", "items": { "type": "string" } },
+        "preferred_skills": { "type": "array", "items": { "type": "string" } },
+        "minimum_experience_years": { "type": ["number", "null"], "minimum": 0 },
+        "required_degree_level": { "type": ["integer", "null"], "minimum": 0, "maximum": 4 },
+        "education_requirements": { "type": "array", "items": { "type": "string" } },
+        "location": { "type": "string" },
+        "work_mode": { "type": "string" },
+        "seniority": { "type": "string" },
+        "eligibility_constraints": { "type": "array", "items": { "type": "string" } },
+        "source_type": { "type": "string" }
+      }
+    },
+    "golden_resume": {
+      "type": "object",
+      "required": ["resume_id", "candidate_name", "resume_text", "candidate_profile"],
+      "properties": {
+        "resume_id": { "type": "string", "pattern": "^(L_)?RES_[0-9A-Za-z_-]+$" },
+        "candidate_name": { "type": "string", "minLength": 2 },
+        "resume_text": { "type": "string", "minLength": 30 },
+        "candidate_profile": {
+          "type": "object",
+          "required": ["skills"],
+          "properties": {
+            "skills": { "type": "array", "items": { "type": "string" } },
+            "experience_years": { "type": ["number", "null"], "minimum": 0 },
+            "seniority": { "type": "string" },
+            "degree_level": { "type": ["integer", "null"], "minimum": 0, "maximum": 4 },
+            "education": { "type": "array" },
+            "projects": { "type": "array" },
+            "preferred_locations": { "type": "array", "items": { "type": "string" } },
+            "preferred_roles": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "source_type": { "type": "string" }
+      }
+    },
+    "golden_recommendation": {
+      "type": "object",
+      "required": ["case_id", "resume_id", "job_id", "relevance", "relevant_for_recommendation", "reference_reasoning"],
+      "properties": {
+        "case_id": { "type": "string", "pattern": "^(L_)?MATCH_[0-9A-Za-z_-]+$" },
+        "resume_id": { "type": "string", "pattern": "^(L_)?RES_[0-9A-Za-z_-]+$" },
+        "job_id": { "type": "string", "pattern": "^(L_)?JOB_[0-9A-Za-z_-]+$" },
+        "relevance": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "relevant_for_recommendation": { "type": "boolean" },
+        "expected_skill_matches": { "type": "array", "items": { "type": "string" } },
+        "expected_missing_required_skills": { "type": "array", "items": { "type": "string" } },
+        "eligibility_status": { "type": "string", "enum": ["eligible", "ineligible", "unknown"] },
+        "reference_reasoning": { "type": "string", "minLength": 10 },
+        "source_type": { "type": "string" }
+      }
+    },
+    "golden_resume_summary": {
+      "type": "object",
+      "required": ["case_id", "resume_id", "audience", "expected_summary", "reference_facts", "must_include", "must_not_claim"],
+      "properties": {
+        "case_id": { "type": "string", "pattern": "^(L_)?SUMMARY_[0-9A-Za-z_-]+$" },
+        "resume_id": { "type": "string", "pattern": "^(L_)?RES_[0-9A-Za-z_-]+$" },
+        "audience": { "type": "string", "enum": ["candidate", "recruiter"] },
+        "expected_summary": { "type": "string", "minLength": 20 },
+        "reference_facts": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "must_include": { "type": "array", "items": { "type": "string" } },
+        "must_not_claim": { "type": "array", "items": { "type": "string" } },
+        "source_type": { "type": "string" }
+      }
+    }
+  }
+}

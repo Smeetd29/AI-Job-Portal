@@ -1,0 +1,285 @@
+{
+  "experiment_name": "Phase 4 Final Re-Evaluation on Held-Out Test Candidates",
+  "timestamp_utc": "2026-10-31T15:06:08Z",
+  "warning": "CRITICAL INTEGRITY NOTICE: Synthetic heuristic labels. Metrics measure rule alignment, not human satisfaction.",
+  "model_configuration": {
+    "chosen_name": "V_Config_1_Balanced",
+    "hyperparameters": {
+      "objective": "lambdarank",
+      "metric": "ndcg",
+      "ndcg_eval_at": [
+        3,
+        5,
+        10
+      ],
+      "learning_rate": 0.05,
+      "num_leaves": 15,
+      "min_data_in_leaf": 2,
+      "seed": 42,
+      "verbose": -1
+    },
+    "num_boost_round": 40,
+    "features_corrected": [
+      "skill_overlap_ratio (restored from ground truth required_skills)",
+      "skill_coverage_weighted (restored from ground truth required_skills)",
+      "cross_encoder_score (single sigmoid, matched input orientation)"
+    ]
+  },
+  "test_metrics": {
+    "precision_at_5": 1.0,
+    "recall_at_5": 0.22691151943869337,
+    "ndcg_at_5": 0.9724733996426572,
+    "mrr": 1.0,
+    "hit_rate_at_5": 1.0
+  },
+  "latency": {
+    "retrieval_p50_ms": 10.180500015849248,
+    "retrieval_p95_ms": 11.260439991019666,
+    "ranking_p50_ms": 23.20835000136867,
+    "ranking_p95_ms": 31.318395002745092,
+    "total_p50_ms": 33.83574998588301,
+    "total_p95_ms": 41.544450019137
+  },
+  "comparison_with_baselines": {
+    "E1_BM25": {
+      "ndcg_at_5": 0.8146,
+      "p50_latency_ms": 8.2
+    },
+    "E2_MiniLM": {
+      "ndcg_at_5": 0.8047,
+      "p50_latency_ms": 66.3
+    },
+    "E3_CrossEncoder": {
+      "ndcg_at_5": 0.8992,
+      "p50_latency_ms": 1101.4
+    },
+    "E4_Original_LambdaMART": {
+      "ndcg_at_5": 0.8366,
+      "p50_latency_ms": 85.3
+    },
+    "E4_Optimized_LambdaMART": {
+      "ndcg_at_5": 0.9725,
+      "delta_vs_e3": 0.0733,
+      "delta_vs_e4_original": 0.1359,
+      "p50_latency_ms": 33.84
+    }
+  },
+  "candidate_breakdown": [
+    {
+      "candidate_id": "CAND049",
+      "top5_job_ids": [
+        "JOB113",
+        "JOB105",
+        "JOB073",
+        "JOB177",
+        "JOB121"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.21739130434782608,
+      "ndcg_at_5": 0.8196294557259916,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 10.8,
+      "ranking_latency_ms": 28.36,
+      "total_latency_ms": 39.16
+    },
+    {
+      "candidate_id": "CAND050",
+      "top5_job_ids": [
+        "JOB074",
+        "JOB122",
+        "JOB002",
+        "JOB058",
+        "JOB194"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.20833333333333334,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 10.82,
+      "ranking_latency_ms": 26.18,
+      "total_latency_ms": 37.01
+    },
+    {
+      "candidate_id": "CAND051",
+      "top5_job_ids": [
+        "JOB131",
+        "JOB003",
+        "JOB067",
+        "JOB107",
+        "JOB195"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.20833333333333334,
+      "ndcg_at_5": 0.9250256699929476,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 10.43,
+      "ranking_latency_ms": 30.35,
+      "total_latency_ms": 40.78
+    },
+    {
+      "candidate_id": "CAND052",
+      "top5_job_ids": [
+        "JOB052",
+        "JOB124",
+        "JOB068",
+        "JOB060",
+        "JOB108"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.20833333333333334,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 11.66,
+      "ranking_latency_ms": 21.77,
+      "total_latency_ms": 33.43
+    },
+    {
+      "candidate_id": "CAND053",
+      "top5_job_ids": [
+        "JOB093",
+        "JOB157",
+        "JOB077",
+        "JOB197",
+        "JOB069"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.21739130434782608,
+      "ndcg_at_5": 0.9250256699929476,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 9.98,
+      "ranking_latency_ms": 32.5,
+      "total_latency_ms": 42.48
+    },
+    {
+      "candidate_id": "CAND054",
+      "top5_job_ids": [
+        "JOB062",
+        "JOB174",
+        "JOB134",
+        "JOB030",
+        "JOB086"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.2,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 10.38,
+      "ranking_latency_ms": 25.81,
+      "total_latency_ms": 36.19
+    },
+    {
+      "candidate_id": "CAND055",
+      "top5_job_ids": [
+        "JOB055",
+        "JOB199",
+        "JOB143",
+        "JOB175",
+        "JOB191"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.2,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 9.65,
+      "ranking_latency_ms": 19.24,
+      "total_latency_ms": 28.88
+    },
+    {
+      "candidate_id": "CAND056",
+      "top5_job_ids": [
+        "JOB096",
+        "JOB144",
+        "JOB024",
+        "JOB128",
+        "JOB168"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.2777777777777778,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 8.43,
+      "ranking_latency_ms": 18.28,
+      "total_latency_ms": 26.71
+    },
+    {
+      "candidate_id": "CAND057",
+      "top5_job_ids": [
+        "JOB113",
+        "JOB105",
+        "JOB049",
+        "JOB081",
+        "JOB065"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.21739130434782608,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 9.95,
+      "ranking_latency_ms": 23.1,
+      "total_latency_ms": 33.05
+    },
+    {
+      "candidate_id": "CAND058",
+      "top5_job_ids": [
+        "JOB090",
+        "JOB010",
+        "JOB034",
+        "JOB138",
+        "JOB002"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.21739130434782608,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 10.93,
+      "ranking_latency_ms": 23.31,
+      "total_latency_ms": 34.24
+    },
+    {
+      "candidate_id": "CAND059",
+      "top5_job_ids": [
+        "JOB131",
+        "JOB003",
+        "JOB011",
+        "JOB187",
+        "JOB043"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.23809523809523808,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 9.53,
+      "ranking_latency_ms": 20.15,
+      "total_latency_ms": 29.68
+    },
+    {
+      "candidate_id": "CAND060",
+      "top5_job_ids": [
+        "JOB108",
+        "JOB132",
+        "JOB092",
+        "JOB076",
+        "JOB044"
+      ],
+      "precision_at_5": 1.0,
+      "recall_at_5": 0.3125,
+      "ndcg_at_5": 1.0,
+      "mrr": 1.0,
+      "hit_rate_at_5": 1.0,
+      "retrieval_latency_ms": 9.79,
+      "ranking_latency_ms": 21.06,
+      "total_latency_ms": 30.84
+    }
+  ]
+}

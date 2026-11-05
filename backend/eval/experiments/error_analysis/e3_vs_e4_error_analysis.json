@@ -1,0 +1,2949 @@
+{
+  "analysis_name": "E3 (Cross-Encoder) vs E4 (LambdaMART) Ranking Error Analysis",
+  "timestamp_utc": "2026-10-31T15:03:11Z",
+  "summary": {
+    "total_held_out_candidates": 12,
+    "candidates_e4_better": 3,
+    "candidates_e4_worse": 7,
+    "candidates_equal": 2,
+    "mean_ndcg_delta": -0.0627,
+    "total_grade3_jobs_demoted_by_e4": 14
+  },
+  "root_cause_findings": [
+    {
+      "issue": "Dead Feature: skill_overlap_ratio & skill_coverage_weighted were all zeros (0.0)",
+      "impact": "CRITICAL",
+      "mechanism": "Job parsing extracted skills from prose description via regex rather than using the ground-truth required_skills attribute on GoldenJob. This zeroed out features 1 and 2 across all 12,000 candidate-job pairs in the training and evaluation matrices, depriving LambdaMART of explicit skill overlap information."
+    },
+    {
+      "issue": "Cross-Encoder Score Double-Sigmoid and Asymmetric Input Mismatch",
+      "impact": "HIGH",
+      "mechanism": "FeatureExtractor applied normalize_cross_encoder_score (sigmoid) to scores that CrossEncoderReranker had already sigmoid-transformed. Furthermore, feature extraction paired (job_text, cand_text) whereas E3 inference paired (cand_text, job_text). This compressed the effective dynamic range of feature 6 (cross_encoder_score) to [0.528, 0.584] during training."
+    },
+    {
+      "issue": "Sample Selection Bias (Coarse Full-Catalog Training vs. Fine-Grained Top-20 Inference)",
+      "impact": "HIGH",
+      "mechanism": "LambdaMART was trained on 200 items per candidate where 85-90% were coarse negatives (different job families). It learned heavy split weights on title_similarity and semantic_similarity to reject coarse negatives. At inference time in E4, Hybrid RRF had already filtered down to the top-20 items where title_similarity variance is tiny noise, leading LambdaMART to demote Grade-3 jobs with slightly different titles in favor of Grade-2 jobs with identical titles."
+    }
+  ],
+  "per_candidate_analysis": [
+    {
+      "candidate_id": "CAND049",
+      "target_role": "Software Engineering",
+      "seniority": "Entry-level",
+      "e3_ndcg_at_5": 0.8196,
+      "e4_ndcg_at_5": 0.925,
+      "delta_ndcg_at_5": 0.1054,
+      "status": "E4_SUPERIOR",
+      "promoted_jobs_in_e4": [
+        "JOB041",
+        "JOB009"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB089",
+        "JOB073"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB121",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.565,
+            "title_similarity": 0.769,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB105",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.565,
+            "title_similarity": 0.769,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB089",
+          "title": "Python Developer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9595,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5531,
+            "title_similarity": 0.7311,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB073",
+          "title": "Full Stack Developer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.907,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5502,
+            "title_similarity": 0.6952,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB113",
+          "title": "Software Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5785,
+            "title_similarity": 0.8157,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB113",
+          "title": "Software Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5785,
+            "title_similarity": 0.8157,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB041",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5697,
+            "title_similarity": 0.769,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB121",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.565,
+            "title_similarity": 0.769,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB105",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.565,
+            "title_similarity": 0.769,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB009",
+          "title": "Frontend Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9492,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5583,
+            "title_similarity": 0.769,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        }
+      ],
+      "explanation": "LambdaMART successfully promoted higher-relevance jobs by leveraging strict seniority match and experience gap constraints to eliminate subtle level mismatches."
+    },
+    {
+      "candidate_id": "CAND050",
+      "target_role": "Data & Analytics",
+      "seniority": "Junior",
+      "e3_ndcg_at_5": 0.6839,
+      "e4_ndcg_at_5": 0.7447,
+      "delta_ndcg_at_5": 0.0607,
+      "status": "E4_SUPERIOR",
+      "promoted_jobs_in_e4": [
+        "JOB034",
+        "JOB026"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB042",
+        "JOB058"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB170",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9381,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5642,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB042",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8551,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5624,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB122",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8815,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5708,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB186",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5715,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB058",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8241,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.566,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB122",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8815,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5708,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB186",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5715,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB034",
+          "title": "Data Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9286,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5642,
+            "title_similarity": 0.7839,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB170",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9381,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5642,
+            "title_similarity": 0.8559,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB026",
+          "title": "Machine Learning Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8734,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5671,
+            "title_similarity": 0.7135,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.7,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        }
+      ],
+      "explanation": "LambdaMART successfully promoted higher-relevance jobs by leveraging strict seniority match and experience gap constraints to eliminate subtle level mismatches."
+    },
+    {
+      "candidate_id": "CAND051",
+      "target_role": "AI & ML",
+      "seniority": "Junior",
+      "e3_ndcg_at_5": 0.9165,
+      "e4_ndcg_at_5": 0.8196,
+      "delta_ndcg_at_5": -0.0969,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB131",
+        "JOB187",
+        "JOB195"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB059",
+        "JOB003",
+        "JOB019"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB107",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9157,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5637,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB059",
+          "title": "NLP Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.7046,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5556,
+            "title_similarity": 0.6816,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB003",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8865,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5556,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB019",
+          "title": "ML Research Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9015,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.543,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB067",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9005,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5603,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB107",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9157,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5637,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB131",
+          "title": "AI Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9359,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5637,
+            "title_similarity": 0.7963,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB187",
+          "title": "AI Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.7519,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5637,
+            "title_similarity": 0.7963,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB195",
+          "title": "ML Research Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8863,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5619,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB067",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9005,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5603,
+            "title_similarity": 0.7799,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 2 Grade-3 job(s) (['JOB059', 'JOB003']) and promoted lower-grade job(s) (['JOB187', 'JOB195']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    },
+    {
+      "candidate_id": "CAND052",
+      "target_role": "Cloud & DevOps",
+      "seniority": "Entry-level",
+      "e3_ndcg_at_5": 1.0,
+      "e4_ndcg_at_5": 0.8281,
+      "delta_ndcg_at_5": -0.1719,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB164",
+        "JOB004"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB132",
+        "JOB020"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB068",
+          "title": "Site Reliability Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9042,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5705,
+            "title_similarity": 0.6742,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB060",
+          "title": "DevOps Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5639,
+            "title_similarity": 0.8235,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB124",
+          "title": "Cloud Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5725,
+            "title_similarity": 0.8106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB132",
+          "title": "Platform Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5523,
+            "title_similarity": 0.7173,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB020",
+          "title": "DevOps Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5523,
+            "title_similarity": 0.8235,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB124",
+          "title": "Cloud Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5725,
+            "title_similarity": 0.8106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB068",
+          "title": "Site Reliability Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9042,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5705,
+            "title_similarity": 0.6742,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB164",
+          "title": "Cloud Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5657,
+            "title_similarity": 0.8106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB060",
+          "title": "DevOps Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5639,
+            "title_similarity": 0.8235,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB004",
+          "title": "Cloud Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5508,
+            "title_similarity": 0.8106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 2 Grade-3 job(s) (['JOB132', 'JOB020']) and promoted lower-grade job(s) (['JOB164', 'JOB004']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    },
+    {
+      "candidate_id": "CAND053",
+      "target_role": "Cybersecurity",
+      "seniority": "Junior",
+      "e3_ndcg_at_5": 0.925,
+      "e4_ndcg_at_5": 0.7447,
+      "delta_ndcg_at_5": -0.1804,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB125",
+        "JOB173",
+        "JOB045"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB093",
+        "JOB181",
+        "JOB077"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB157",
+          "title": "Application Security Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5632,
+            "title_similarity": 0.7523,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB093",
+          "title": "SOC Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9443,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5552,
+            "title_similarity": 0.6648,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB181",
+          "title": "SOC Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9463,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5516,
+            "title_similarity": 0.6648,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB077",
+          "title": "Application Security Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9074,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5585,
+            "title_similarity": 0.7523,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB069",
+          "title": "Security Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8896,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5585,
+            "title_similarity": 0.771,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB125",
+          "title": "Security Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.935,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5679,
+            "title_similarity": 0.771,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB157",
+          "title": "Application Security Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5632,
+            "title_similarity": 0.7523,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB173",
+          "title": "Application Security Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5615,
+            "title_similarity": 0.7523,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB045",
+          "title": "Application Security Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9303,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5615,
+            "title_similarity": 0.7523,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB069",
+          "title": "Security Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8896,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5585,
+            "title_similarity": 0.771,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 3 Grade-3 job(s) (['JOB093', 'JOB181', 'JOB077']) and promoted lower-grade job(s) (['JOB173', 'JOB045']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    },
+    {
+      "candidate_id": "CAND054",
+      "target_role": "Product & Design",
+      "seniority": "Junior",
+      "e3_ndcg_at_5": 1.0,
+      "e4_ndcg_at_5": 1.0,
+      "delta_ndcg_at_5": 0.0,
+      "status": "EQUAL",
+      "promoted_jobs_in_e4": [
+        "JOB014",
+        "JOB102",
+        "JOB006"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB118",
+        "JOB062",
+        "JOB166"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB118",
+          "title": "UI Designer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.6295,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5632,
+            "title_similarity": 0.6349,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB198",
+          "title": "Product Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9069,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5662,
+            "title_similarity": 0.7326,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB190",
+          "title": "Product Manager",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.744,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5679,
+            "title_similarity": 0.6921,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB062",
+          "title": "UX Designer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8622,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5632,
+            "title_similarity": 0.6862,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB166",
+          "title": "UI Designer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.6798,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5385,
+            "title_similarity": 0.6349,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB014",
+          "title": "Product Operations Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.844,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5743,
+            "title_similarity": 0.6974,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB102",
+          "title": "Product Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8187,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5763,
+            "title_similarity": 0.7326,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB198",
+          "title": "Product Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9069,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5662,
+            "title_similarity": 0.7326,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB190",
+          "title": "Product Manager",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.744,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5679,
+            "title_similarity": 0.6921,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB006",
+          "title": "Product Manager",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.6024,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.925,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5697,
+            "title_similarity": 0.6921,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.6,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "Both E3 and E4 produced equivalent or near-identical top-5 rankings."
+    },
+    {
+      "candidate_id": "CAND055",
+      "target_role": "Finance & Operations",
+      "seniority": "Mid-level",
+      "e3_ndcg_at_5": 1.0,
+      "e4_ndcg_at_5": 1.0,
+      "delta_ndcg_at_5": 0.0,
+      "status": "EQUAL",
+      "promoted_jobs_in_e4": [
+        "JOB111",
+        "JOB047",
+        "JOB127"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB063",
+        "JOB199",
+        "JOB175"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB143",
+          "title": "FinTech Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9299,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5757,
+            "title_similarity": 0.7613,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB103",
+          "title": "Risk Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.817,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5778,
+            "title_similarity": 0.7325,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB063",
+          "title": "Risk Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9316,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5562,
+            "title_similarity": 0.7325,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB199",
+          "title": "Business Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9639,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5562,
+            "title_similarity": 0.7449,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB175",
+          "title": "Operations Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8103,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5691,
+            "title_similarity": 0.7402,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB111",
+          "title": "Operations Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.7514,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.578,
+            "title_similarity": 0.7402,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB143",
+          "title": "FinTech Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9299,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5757,
+            "title_similarity": 0.7613,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB047",
+          "title": "Risk Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8676,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5711,
+            "title_similarity": 0.7325,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB103",
+          "title": "Risk Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.817,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5778,
+            "title_similarity": 0.7325,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB127",
+          "title": "Operations Analyst",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8264,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 1.0,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5691,
+            "title_similarity": 0.7402,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.9,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "Both E3 and E4 produced equivalent or near-identical top-5 rankings."
+    },
+    {
+      "candidate_id": "CAND056",
+      "target_role": "QA & Support",
+      "seniority": "Intern",
+      "e3_ndcg_at_5": 0.7396,
+      "e4_ndcg_at_5": 0.9278,
+      "delta_ndcg_at_5": 0.1883,
+      "status": "E4_SUPERIOR",
+      "promoted_jobs_in_e4": [
+        "JOB168",
+        "JOB008",
+        "JOB144",
+        "JOB024"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB160",
+        "JOB032",
+        "JOB176",
+        "JOB128"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB096",
+          "title": "Automation Test Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9275,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5778,
+            "title_similarity": 0.6875,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB160",
+          "title": "QA Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.49,
+            "cross_encoder_score": 0.5527,
+            "title_similarity": 0.8021,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB032",
+          "title": "QA Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5562,
+            "title_similarity": 0.8021,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB176",
+          "title": "QA Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.49,
+            "cross_encoder_score": 0.5447,
+            "title_similarity": 0.8021,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB128",
+          "title": "Automation Test Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9236,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5512,
+            "title_similarity": 0.6875,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB096",
+          "title": "Automation Test Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9275,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5778,
+            "title_similarity": 0.6875,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB168",
+          "title": "Technical Support Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8185,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5673,
+            "title_similarity": 0.748,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB008",
+          "title": "QA Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9308,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.49,
+            "cross_encoder_score": 0.5578,
+            "title_similarity": 0.8021,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB144",
+          "title": "Technical Support Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9667,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5578,
+            "title_similarity": 0.748,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB024",
+          "title": "Automation Test Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5578,
+            "title_similarity": 0.6875,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.6667
+          }
+        }
+      ],
+      "explanation": "LambdaMART successfully promoted higher-relevance jobs by leveraging strict seniority match and experience gap constraints to eliminate subtle level mismatches."
+    },
+    {
+      "candidate_id": "CAND057",
+      "target_role": "Software Engineering",
+      "seniority": "Intern",
+      "e3_ndcg_at_5": 0.8027,
+      "e4_ndcg_at_5": 0.5035,
+      "delta_ndcg_at_5": -0.2992,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB145",
+        "JOB137",
+        "JOB169",
+        "JOB113"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB049",
+        "JOB073",
+        "JOB105",
+        "JOB009"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB049",
+          "title": "Mobile App Developer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8282,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.544,
+            "title_similarity": 0.6768,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB073",
+          "title": "Full Stack Developer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8687,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5452,
+            "title_similarity": 0.7106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB105",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.964,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5329,
+            "title_similarity": 0.7748,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB009",
+          "title": "Frontend Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9448,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5329,
+            "title_similarity": 0.7748,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB097",
+          "title": "Full Stack Developer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5586,
+            "title_similarity": 0.7106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB097",
+          "title": "Full Stack Developer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5586,
+            "title_similarity": 0.7106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB145",
+          "title": "Full Stack Developer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8661,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.49,
+            "cross_encoder_score": 0.5519,
+            "title_similarity": 0.7106,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB137",
+          "title": "Software Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5549,
+            "title_similarity": 0.8068,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB169",
+          "title": "Software Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9144,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5397,
+            "title_similarity": 0.8068,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB113",
+          "title": "Software Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 0.85,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5397,
+            "title_similarity": 0.8068,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 3 Grade-3 job(s) (['JOB049', 'JOB105', 'JOB009']) and promoted lower-grade job(s) (['JOB145', 'JOB137', 'JOB169']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    },
+    {
+      "candidate_id": "CAND058",
+      "target_role": "Data & Analytics",
+      "seniority": "Intern",
+      "e3_ndcg_at_5": 0.9031,
+      "e4_ndcg_at_5": 0.8416,
+      "delta_ndcg_at_5": -0.0615,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB010",
+        "JOB162"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB130",
+        "JOB058"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB090",
+          "title": "Machine Learning Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5836,
+            "title_similarity": 0.7164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB130",
+          "title": "Machine Learning Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.7979,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5508,
+            "title_similarity": 0.7164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB146",
+          "title": "Data Analyst",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5605,
+            "title_similarity": 0.7787,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB034",
+          "title": "Data Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8772,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5639,
+            "title_similarity": 0.7614,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB058",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8831,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5456,
+            "title_similarity": 0.78,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB090",
+          "title": "Machine Learning Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5836,
+            "title_similarity": 0.7164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB010",
+          "title": "Junior Data Scientist",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5668,
+            "title_similarity": 0.78,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB034",
+          "title": "Data Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.8772,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5639,
+            "title_similarity": 0.7614,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB146",
+          "title": "Data Analyst",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5605,
+            "title_similarity": 0.7787,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB162",
+          "title": "Analytics Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.8908,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5558,
+            "title_similarity": 0.7716,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 2 Grade-3 job(s) (['JOB130', 'JOB058']) and promoted lower-grade job(s) (['JOB162']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    },
+    {
+      "candidate_id": "CAND059",
+      "target_role": "AI & ML",
+      "seniority": "Entry-level",
+      "e3_ndcg_at_5": 1.0,
+      "e4_ndcg_at_5": 0.8678,
+      "delta_ndcg_at_5": -0.1322,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB195",
+        "JOB027"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB187",
+        "JOB099"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB003",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5632,
+            "title_similarity": 0.764,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB131",
+          "title": "AI Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9847,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5717,
+            "title_similarity": 0.8164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB011",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9478,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5662,
+            "title_similarity": 0.764,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB187",
+          "title": "AI Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.7964,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5583,
+            "title_similarity": 0.8164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB099",
+          "title": "Computer Vision Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9866,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5438,
+            "title_similarity": 0.7826,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB131",
+          "title": "AI Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9847,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5717,
+            "title_similarity": 0.8164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB195",
+          "title": "ML Research Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9286,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5697,
+            "title_similarity": 0.764,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB011",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 0.9478,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5662,
+            "title_similarity": 0.764,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB003",
+          "title": "ML Research Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5632,
+            "title_similarity": 0.764,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.3333
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB027",
+          "title": "AI Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9712,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5502,
+            "title_similarity": 0.8164,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 1 Grade-3 job(s) (['JOB187']) and promoted lower-grade job(s) (['JOB195', 'JOB027']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    },
+    {
+      "candidate_id": "CAND060",
+      "target_role": "Cloud & DevOps",
+      "seniority": "Intern",
+      "e3_ndcg_at_5": 1.0,
+      "e4_ndcg_at_5": 0.8358,
+      "delta_ndcg_at_5": -0.1642,
+      "status": "E4_DEGRADED",
+      "promoted_jobs_in_e4": [
+        "JOB116"
+      ],
+      "demoted_jobs_from_e3": [
+        "JOB132"
+      ],
+      "e3_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB108",
+          "title": "DevOps Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5767,
+            "title_similarity": 0.8024,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB132",
+          "title": "Platform Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5534,
+            "title_similarity": 0.7025,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.0
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB076",
+          "title": "DevOps Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9479,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5635,
+            "title_similarity": 0.8024,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB012",
+          "title": "DevOps Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5653,
+            "title_similarity": 0.8024,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB156",
+          "title": "Cloud Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5602,
+            "title_similarity": 0.8004,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "e4_top5": [
+        {
+          "rank": 1,
+          "job_id": "JOB108",
+          "title": "DevOps Engineer",
+          "relevance_grade": 3,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5767,
+            "title_similarity": 0.8024,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 2,
+          "job_id": "JOB012",
+          "title": "DevOps Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5653,
+            "title_similarity": 0.8024,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 3,
+          "job_id": "JOB076",
+          "title": "DevOps Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9479,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.5635,
+            "title_similarity": 0.8024,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 4,
+          "job_id": "JOB156",
+          "title": "Cloud Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 1.0,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 1.0,
+            "cross_encoder_score": 0.5602,
+            "title_similarity": 0.8004,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 1.0,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        },
+        {
+          "rank": 5,
+          "job_id": "JOB116",
+          "title": "Cloud Engineer",
+          "relevance_grade": 2,
+          "features": {
+            "semantic_similarity": 0.9216,
+            "skill_overlap_ratio": 0.0,
+            "skill_coverage_weighted": 0.0,
+            "experience_match": 0.85,
+            "education_match": 1.0,
+            "seniority_match": 0.7,
+            "cross_encoder_score": 0.554,
+            "title_similarity": 0.8004,
+            "graph_skill_coverage": 1.0,
+            "section_coverage": 1.0,
+            "strict_seniority_match": 0.7,
+            "experience_gap": 0.5,
+            "required_skill_coverage": 1.0,
+            "title_keyword_overlap": 0.5
+          }
+        }
+      ],
+      "explanation": "LambdaMART demoted 1 Grade-3 job(s) (['JOB132']) and promoted lower-grade job(s) (['JOB116']) primarily due to title_similarity and semantic_similarity feature splits over-riding the compressed cross_encoder_score (and zeroed-out skill_overlap_ratio)."
+    }
+  ]
+}

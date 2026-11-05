@@ -1,0 +1,150 @@
+name: CD Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*.*.*' ]
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write # For AWS / GCP OIDC authentication
+
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/${{ github.repository }}/backend
+  FRONTEND_IMAGE: ghcr.io/${{ github.repository }}/frontend
+
+jobs:
+  build-and-push:
+    name: Build & Push Container Images to GHCR
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Determine Image Tag
+        id: tag
+        run: |
+          TAG=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Backend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:${{ steps.tag.outputs.tag }}
+            ${{ env.BACKEND_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:${{ steps.tag.outputs.tag }}
+            ${{ env.FRONTEND_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    name: Deploy to Staging (Automated)
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Configure Kustomize Image Tags
+        run: |
+          cd k8s/overlays/staging
+          kustomize edit set image ghcr.io/careerconnect/backend=${{ env.BACKEND_IMAGE }}:${{ needs.build-and-push.outputs.image_tag }}
+          kustomize edit set image ghcr.io/careerconnect/frontend=${{ env.FRONTEND_IMAGE }}:${{ needs.build-and-push.outputs.image_tag }}
+
+      # Cloud OIDC authentication step placeholder:
+      # - name: Configure AWS Credentials via OIDC
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsDeploymentRole
+      #     aws-region: us-east-1
+
+      - name: Execute Pre-Rollout Migration Job
+        run: |
+          echo "Applying database migration Job..."
+          # kubectl apply -f k8s/base/migrate-job.yaml -n careerconnect
+          # kubectl wait --for=condition=complete job/careerconnect-migrate -n careerconnect --timeout=300s
+
+      - name: Rollout Staging Manifests
+        run: |
+          echo "Deploying staging overlay with tag ${{ needs.build-and-push.outputs.image_tag }}..."
+          # kubectl apply -k k8s/overlays/staging
+          # kubectl rollout status deployment/staging-careerconnect-api -n careerconnect --timeout=180s
+
+      - name: Staging Smoke Test
+        run: |
+          echo "Running staging smoke tests against /healthz and /readyz..."
+          # curl -f https://staging.careerconnect.example.com/readyz
+
+  deploy-prod:
+    name: Deploy to Production (Manual Approval Gate)
+    needs: [build-and-push, deploy-staging]
+    runs-on: ubuntu-latest
+    environment: production # Requires manual reviewer approval in GitHub Environment settings
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v2
+
+      - name: Configure Kustomize Image Tags
+        run: |
+          cd k8s/overlays/prod
+          kustomize edit set image ghcr.io/careerconnect/backend=${{ env.BACKEND_IMAGE }}:${{ needs.build-and-push.outputs.image_tag }}
+          kustomize edit set image ghcr.io/careerconnect/frontend=${{ env.FRONTEND_IMAGE }}:${{ needs.build-and-push.outputs.image_tag }}
+
+      - name: Execute Production Database Migration (Backwards-Compatible)
+        run: |
+          echo "Executing production migration Job..."
+          # kubectl apply -f k8s/base/migrate-job.yaml -n careerconnect
+          # kubectl wait --for=condition=complete job/careerconnect-migrate -n careerconnect --timeout=300s
+
+      - name: Zero-Downtime Rolling Update
+        run: |
+          echo "Rolling out production release ${{ needs.build-and-push.outputs.image_tag }}..."
+          # kubectl apply -k k8s/overlays/prod
+          # kubectl rollout status deployment/careerconnect-api -n careerconnect --timeout=300s
+          # kubectl rollout status deployment/careerconnect-frontend -n careerconnect --timeout=120s
+
+      - name: Production Health Verification
+        run: |
+          echo "Verifying production health probes..."
+          # curl -f https://careerconnect.example.com/healthz
+          # curl -f https://careerconnect.example.com/readyz
+
+      - name: Rollback Instructions Note
+        if: failure()
+        run: |
+          echo "CRITICAL: Production deployment failed. Execute emergency rollback:"
+          echo "  kubectl rollout undo deployment/careerconnect-api -n careerconnect"
+          echo "  kubectl rollout undo deployment/careerconnect-frontend -n careerconnect"

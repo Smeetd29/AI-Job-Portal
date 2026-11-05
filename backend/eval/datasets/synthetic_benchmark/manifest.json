@@ -1,0 +1,16 @@
+{
+  "dataset_name": "CareerConnect Synthetic Benchmark Expansion",
+  "created_date": "2026-10-31",
+  "synthetic": true,
+  "jobs": 200,
+  "candidates": 60,
+  "candidate_job_pairs": 12000,
+  "synthetic_interaction_events": 1800,
+  "label_provenance": "heuristic-generated; not human judgments",
+  "split_counts": {
+    "train_candidates": 42,
+    "validation_candidates": 6,
+    "test_candidates": 12
+  },
+  "warning": "Do not report metrics on these heuristic labels as real-world generalization performance."
+}

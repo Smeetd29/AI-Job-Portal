@@ -1,0 +1,6 @@
+# ML inference dependencies used by the API and Celery worker.
+torch>=2.2.0
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.2
+lightgbm>=4.0.0
+scikit-learn>=1.3.0

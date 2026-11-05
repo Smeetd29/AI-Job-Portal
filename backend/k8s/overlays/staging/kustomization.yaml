@@ -1,0 +1,43 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: careerconnect-staging
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      version: v1
+      kind: Namespace
+      name: careerconnect
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: careerconnect-staging
+  - target:
+      kind: Ingress
+      name: careerconnect-ingress
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: staging.careerconnect.example.com
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: staging.careerconnect.example.com
+  - target:
+      kind: ConfigMap
+      name: careerconnect-config
+    patch: |-
+      - op: replace
+        path: /data/ALLOWED_HOSTS
+        value: "staging.careerconnect.example.com,localhost,api,frontend"
+      - op: replace
+        path: /data/CORS_ALLOWED_ORIGINS
+        value: "https://staging.careerconnect.example.com"
+      - op: replace
+        path: /data/CSRF_TRUSTED_ORIGINS
+        value: "https://staging.careerconnect.example.com"
+      - op: add
+        path: /data/PILOT_INVITE_ONLY
+        value: "True"

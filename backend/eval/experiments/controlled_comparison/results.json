@@ -1,0 +1,1008 @@
+{
+  "experiment_name": "Controlled Recommendation Configuration Ablation (E1-E4)",
+  "timestamp_utc": "2026-10-31T14:35:31Z",
+  "warning": "CRITICAL INTEGRITY NOTICE: Synthetic heuristic labels. Metrics measure rule alignment, not human satisfaction.",
+  "experimental_setup": {
+    "catalog_jobs_count": 200,
+    "test_candidates_count": 12,
+    "test_candidate_ids": [
+      "CAND049",
+      "CAND050",
+      "CAND051",
+      "CAND052",
+      "CAND053",
+      "CAND054",
+      "CAND055",
+      "CAND056",
+      "CAND057",
+      "CAND058",
+      "CAND059",
+      "CAND060"
+    ],
+    "recommendation_cutoff_k": 5,
+    "retrieval_candidate_pool_size": 20,
+    "candidate_split_sha256": "b820c3c4cf13b588d7237c44de82cb61789e4870648c614adddba4e8ba5dc0c6",
+    "random_seed": 42
+  },
+  "metric_definitions": {
+    "precision_at_5": "Relevant items in top 5 / 5 (relevance grade >= 2)",
+    "recall_at_5": "Relevant items in top 5 / total relevant items for candidate in catalog",
+    "ndcg_at_5": "Normalized Discounted Cumulative Gain at rank 5 using 4-level graded relevance (0-3)",
+    "mrr": "Reciprocal rank of first relevant item (grade >= 2)",
+    "hit_rate_at_5": "1.0 if at least one relevant item in top 5, else 0.0"
+  },
+  "configurations": {
+    "E1": {
+      "config": {
+        "id": "E1",
+        "name": "BM25 Only",
+        "description": "Lexical BM25 ranking across all catalog jobs using candidate profile and skill tokens.",
+        "retrieval": "BM25Okapi (k1=1.5, b=0.75)",
+        "ranking": "None (direct BM25 score ranking)"
+      },
+      "metrics": {
+        "precision_at_5": 1.0,
+        "recall_at_5": 0.22691151943869337,
+        "ndcg_at_5": 0.814577305896913,
+        "mrr": 1.0,
+        "hit_rate_at_5": 1.0
+      },
+      "latency": {
+        "retrieval_p50_ms": 8.158699987689033,
+        "retrieval_p95_ms": 10.737490007886663,
+        "ranking_p50_ms": 0.0,
+        "ranking_p95_ms": 0.0,
+        "total_p50_ms": 8.158699987689033,
+        "total_p95_ms": 10.737490007886663,
+        "total_mean_ms": 8.053866671010232
+      },
+      "candidate_details": [
+        {
+          "candidate_id": "CAND049",
+          "top5_job_ids": [
+            "JOB113",
+            "JOB041",
+            "JOB121",
+            "JOB145",
+            "JOB073"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.9250256699929476,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 10.43,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 10.43
+        },
+        {
+          "candidate_id": "CAND050",
+          "top5_job_ids": [
+            "JOB122",
+            "JOB058",
+            "JOB186",
+            "JOB010",
+            "JOB018"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.9165323715184533,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 8.48,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 8.48
+        },
+        {
+          "candidate_id": "CAND051",
+          "top5_job_ids": [
+            "JOB067",
+            "JOB003",
+            "JOB051",
+            "JOB107",
+            "JOB011"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.8281227542004858,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 7.93,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 7.93
+        },
+        {
+          "candidate_id": "CAND052",
+          "top5_job_ids": [
+            "JOB020",
+            "JOB140",
+            "JOB060",
+            "JOB084",
+            "JOB076"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.7192801759488139,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 8.39,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 8.39
+        },
+        {
+          "candidate_id": "CAND053",
+          "top5_job_ids": [
+            "JOB093",
+            "JOB149",
+            "JOB069",
+            "JOB157",
+            "JOB125"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.7808192186449511,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 7.15,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 7.15
+        },
+        {
+          "candidate_id": "CAND054",
+          "top5_job_ids": [
+            "JOB174",
+            "JOB198",
+            "JOB006",
+            "JOB118",
+            "JOB014"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 10.1,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 10.1
+        },
+        {
+          "candidate_id": "CAND055",
+          "top5_job_ids": [
+            "JOB111",
+            "JOB175",
+            "JOB039",
+            "JOB055",
+            "JOB135"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 0.9030970842075382,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 7.82,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 7.82
+        },
+        {
+          "candidate_id": "CAND056",
+          "top5_job_ids": [
+            "JOB152",
+            "JOB144",
+            "JOB168",
+            "JOB088",
+            "JOB192"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2777777777777778,
+          "ndcg_at_5": 0.6545588859738241,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 8.52,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 8.52
+        },
+        {
+          "candidate_id": "CAND057",
+          "top5_job_ids": [
+            "JOB177",
+            "JOB145",
+            "JOB073",
+            "JOB049",
+            "JOB097"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.5120390570529751,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 11.11,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 11.11
+        },
+        {
+          "candidate_id": "CAND058",
+          "top5_job_ids": [
+            "JOB010",
+            "JOB090",
+            "JOB018",
+            "JOB034",
+            "JOB098"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.8281227542004858,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 5.79,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 5.79
+        },
+        {
+          "candidate_id": "CAND059",
+          "top5_job_ids": [
+            "JOB195",
+            "JOB011",
+            "JOB003",
+            "JOB187",
+            "JOB131"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.23809523809523808,
+          "ndcg_at_5": 0.8715370768264441,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 5.79,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 5.79
+        },
+        {
+          "candidate_id": "CAND060",
+          "top5_job_ids": [
+            "JOB108",
+            "JOB076",
+            "JOB044",
+            "JOB012",
+            "JOB060"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.3125,
+          "ndcg_at_5": 0.8357926221960373,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 5.13,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 5.13
+        }
+      ]
+    },
+    "E2": {
+      "config": {
+        "id": "E2",
+        "name": "MiniLM Semantic Only",
+        "description": "Dense semantic cosine similarity retrieval with sentence-transformers/all-MiniLM-L6-v2.",
+        "retrieval": "FAISS IndexFlatIP (cosine similarity)",
+        "ranking": "None (direct dense similarity ranking)"
+      },
+      "metrics": {
+        "precision_at_5": 0.9666666666666667,
+        "recall_at_5": 0.2176522601794341,
+        "ndcg_at_5": 0.8046865786754256,
+        "mrr": 1.0,
+        "hit_rate_at_5": 1.0
+      },
+      "latency": {
+        "retrieval_p50_ms": 66.33810000494123,
+        "retrieval_p95_ms": 76.30302497418597,
+        "ranking_p50_ms": 0.0,
+        "ranking_p95_ms": 0.0,
+        "total_p50_ms": 66.33810000494123,
+        "total_p95_ms": 76.30302497418597,
+        "total_mean_ms": 65.2566999924602
+      },
+      "candidate_details": [
+        {
+          "candidate_id": "CAND049",
+          "top5_job_ids": [
+            "JOB121",
+            "JOB105",
+            "JOB113",
+            "JOB089",
+            "JOB073"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.8415580415114009,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 78.06,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 78.06
+        },
+        {
+          "candidate_id": "CAND050",
+          "top5_job_ids": [
+            "JOB074",
+            "JOB186",
+            "JOB154",
+            "JOB122",
+            "JOB042"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.8281227542004858,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 68.46,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 68.46
+        },
+        {
+          "candidate_id": "CAND051",
+          "top5_job_ids": [
+            "JOB131",
+            "JOB107",
+            "JOB003",
+            "JOB155",
+            "JOB019"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.8415580415114009,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 61.41,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 61.41
+        },
+        {
+          "candidate_id": "CAND052",
+          "top5_job_ids": [
+            "JOB020",
+            "JOB124",
+            "JOB132",
+            "JOB012",
+            "JOB196"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.9165323715184533,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 69.04,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 69.04
+        },
+        {
+          "candidate_id": "CAND053",
+          "top5_job_ids": [
+            "JOB157",
+            "JOB029",
+            "JOB085",
+            "JOB173",
+            "JOB053"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.6223772601563521,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 58.68,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 58.68
+        },
+        {
+          "candidate_id": "CAND054",
+          "top5_job_ids": [
+            "JOB198",
+            "JOB174",
+            "JOB190",
+            "JOB014",
+            "JOB102"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 69.48,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 69.48
+        },
+        {
+          "candidate_id": "CAND055",
+          "top5_job_ids": [
+            "JOB063",
+            "JOB047",
+            "JOB199",
+            "JOB055",
+            "JOB191"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 53.0,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 53.0
+        },
+        {
+          "candidate_id": "CAND056",
+          "top5_job_ids": [
+            "JOB128",
+            "JOB024",
+            "JOB160",
+            "JOB184",
+            "JOB072"
+          ],
+          "precision_at_5": 0.6,
+          "recall_at_5": 0.16666666666666666,
+          "ndcg_at_5": 0.5604228010734622,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 70.03,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 70.03
+        },
+        {
+          "candidate_id": "CAND057",
+          "top5_job_ids": [
+            "JOB065",
+            "JOB097",
+            "JOB057",
+            "JOB017",
+            "JOB105"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.6973515901634045,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 74.87,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 74.87
+        },
+        {
+          "candidate_id": "CAND058",
+          "top5_job_ids": [
+            "JOB138",
+            "JOB050",
+            "JOB146",
+            "JOB010",
+            "JOB066"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.7058448886378986,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 56.16,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 56.16
+        },
+        {
+          "candidate_id": "CAND059",
+          "top5_job_ids": [
+            "JOB099",
+            "JOB003",
+            "JOB043",
+            "JOB019",
+            "JOB187"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.23809523809523808,
+          "ndcg_at_5": 0.6765473050556959,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 59.68,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 59.68
+        },
+        {
+          "candidate_id": "CAND060",
+          "top5_job_ids": [
+            "JOB132",
+            "JOB156",
+            "JOB108",
+            "JOB028",
+            "JOB076"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.3125,
+          "ndcg_at_5": 0.9659238902765536,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 64.22,
+          "ranking_latency_ms": 0.0,
+          "total_latency_ms": 64.22
+        }
+      ]
+    },
+    "E3": {
+      "config": {
+        "id": "E3",
+        "name": "Hybrid + RRF + Cross-Encoder Rerank",
+        "description": "Hybrid BM25 + Dense retrieval fused via RRF (k=60), reranked by ms-marco-MiniLM-L-6-v2 cross-encoder.",
+        "retrieval": "Hybrid BM25 + MiniLM + RRF (k=60)",
+        "ranking": "Cross-Encoder (ms-marco-MiniLM-L-6-v2) top-20 rerank"
+      },
+      "metrics": {
+        "precision_at_5": 1.0,
+        "recall_at_5": 0.22691151943869337,
+        "ndcg_at_5": 0.8992085221740332,
+        "mrr": 1.0,
+        "hit_rate_at_5": 1.0
+      },
+      "latency": {
+        "retrieval_p50_ms": 81.41159999649972,
+        "retrieval_p95_ms": 205.75401000387484,
+        "ranking_p50_ms": 1014.3311500141863,
+        "ranking_p95_ms": 1316.0904799966372,
+        "total_p50_ms": 1101.4005500474013,
+        "total_p95_ms": 1539.0128250000998,
+        "total_mean_ms": 1149.7381583515864
+      },
+      "candidate_details": [
+        {
+          "candidate_id": "CAND049",
+          "top5_job_ids": [
+            "JOB121",
+            "JOB105",
+            "JOB089",
+            "JOB073",
+            "JOB113"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.8196294557259916,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 69.94,
+          "ranking_latency_ms": 1514.43,
+          "total_latency_ms": 1584.38
+        },
+        {
+          "candidate_id": "CAND050",
+          "top5_job_ids": [
+            "JOB170",
+            "JOB042",
+            "JOB122",
+            "JOB186",
+            "JOB058"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.6839163028524893,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 76.28,
+          "ranking_latency_ms": 1057.06,
+          "total_latency_ms": 1133.34
+        },
+        {
+          "candidate_id": "CAND051",
+          "top5_job_ids": [
+            "JOB107",
+            "JOB059",
+            "JOB003",
+            "JOB019",
+            "JOB067"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.9165323715184533,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 89.2,
+          "ranking_latency_ms": 968.18,
+          "total_latency_ms": 1057.38
+        },
+        {
+          "candidate_id": "CAND052",
+          "top5_job_ids": [
+            "JOB068",
+            "JOB060",
+            "JOB124",
+            "JOB132",
+            "JOB020"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 72.43,
+          "ranking_latency_ms": 1139.3,
+          "total_latency_ms": 1211.73
+        },
+        {
+          "candidate_id": "CAND053",
+          "top5_job_ids": [
+            "JOB157",
+            "JOB093",
+            "JOB181",
+            "JOB077",
+            "JOB069"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.9250256699929476,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 69.83,
+          "ranking_latency_ms": 926.72,
+          "total_latency_ms": 996.55
+        },
+        {
+          "candidate_id": "CAND054",
+          "top5_job_ids": [
+            "JOB118",
+            "JOB198",
+            "JOB190",
+            "JOB062",
+            "JOB166"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 87.5,
+          "ranking_latency_ms": 921.44,
+          "total_latency_ms": 1008.94
+        },
+        {
+          "candidate_id": "CAND055",
+          "top5_job_ids": [
+            "JOB143",
+            "JOB103",
+            "JOB063",
+            "JOB199",
+            "JOB175"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 61.63,
+          "ranking_latency_ms": 902.88,
+          "total_latency_ms": 964.52
+        },
+        {
+          "candidate_id": "CAND056",
+          "top5_job_ids": [
+            "JOB096",
+            "JOB160",
+            "JOB032",
+            "JOB176",
+            "JOB128"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2777777777777778,
+          "ndcg_at_5": 0.7395535773606181,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 86.54,
+          "ranking_latency_ms": 1004.05,
+          "total_latency_ms": 1090.6
+        },
+        {
+          "candidate_id": "CAND057",
+          "top5_job_ids": [
+            "JOB049",
+            "JOB073",
+            "JOB105",
+            "JOB009",
+            "JOB097"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.8027478044303603,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 348.09,
+          "ranking_latency_ms": 1153.81,
+          "total_latency_ms": 1501.9
+        },
+        {
+          "candidate_id": "CAND058",
+          "top5_job_ids": [
+            "JOB090",
+            "JOB130",
+            "JOB146",
+            "JOB034",
+            "JOB058"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.9030970842075382,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 69.67,
+          "ranking_latency_ms": 915.28,
+          "total_latency_ms": 984.96
+        },
+        {
+          "candidate_id": "CAND059",
+          "top5_job_ids": [
+            "JOB003",
+            "JOB131",
+            "JOB011",
+            "JOB187",
+            "JOB099"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.23809523809523808,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 87.6,
+          "ranking_latency_ms": 1024.61,
+          "total_latency_ms": 1112.21
+        },
+        {
+          "candidate_id": "CAND060",
+          "top5_job_ids": [
+            "JOB108",
+            "JOB132",
+            "JOB076",
+            "JOB012",
+            "JOB156"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.3125,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 89.3,
+          "ranking_latency_ms": 1061.08,
+          "total_latency_ms": 1150.38
+        }
+      ]
+    },
+    "E4": {
+      "config": {
+        "id": "E4",
+        "name": "Hybrid + RRF + Cross-Encoder + LambdaMART",
+        "description": "Full production pipeline: Hybrid retrieval + RRF (k=60) + 14-feature LightGBM LambdaMART ranking.",
+        "retrieval": "Hybrid BM25 + MiniLM + RRF (k=60)",
+        "ranking": "LightGBM LambdaMART v3 (14 features including CE)"
+      },
+      "metrics": {
+        "precision_at_5": 1.0,
+        "recall_at_5": 0.22691151943869337,
+        "ndcg_at_5": 0.8365518068434724,
+        "mrr": 1.0,
+        "hit_rate_at_5": 1.0
+      },
+      "latency": {
+        "retrieval_p50_ms": 81.26189999165945,
+        "retrieval_p95_ms": 132.75024499453139,
+        "ranking_p50_ms": 3.8437999901361763,
+        "ranking_p95_ms": 10.23044498579111,
+        "total_p50_ms": 85.32325000851415,
+        "total_p95_ms": 139.86191498697735,
+        "total_mean_ms": 93.81213333108462
+      },
+      "candidate_details": [
+        {
+          "candidate_id": "CAND049",
+          "top5_job_ids": [
+            "JOB113",
+            "JOB041",
+            "JOB121",
+            "JOB105",
+            "JOB009"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.9250256699929476,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 87.07,
+          "ranking_latency_ms": 9.75,
+          "total_latency_ms": 96.82
+        },
+        {
+          "candidate_id": "CAND050",
+          "top5_job_ids": [
+            "JOB122",
+            "JOB186",
+            "JOB034",
+            "JOB170",
+            "JOB026"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.7446551257189392,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 75.49,
+          "ranking_latency_ms": 4.81,
+          "total_latency_ms": 80.3
+        },
+        {
+          "candidate_id": "CAND051",
+          "top5_job_ids": [
+            "JOB107",
+            "JOB131",
+            "JOB187",
+            "JOB195",
+            "JOB067"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.8196294557259916,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 76.26,
+          "ranking_latency_ms": 3.28,
+          "total_latency_ms": 79.53
+        },
+        {
+          "candidate_id": "CAND052",
+          "top5_job_ids": [
+            "JOB124",
+            "JOB068",
+            "JOB164",
+            "JOB060",
+            "JOB004"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.20833333333333334,
+          "ndcg_at_5": 0.8281227542004858,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 80.46,
+          "ranking_latency_ms": 4.84,
+          "total_latency_ms": 85.3
+        },
+        {
+          "candidate_id": "CAND053",
+          "top5_job_ids": [
+            "JOB125",
+            "JOB157",
+            "JOB173",
+            "JOB045",
+            "JOB069"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.7446551257189392,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 82.06,
+          "ranking_latency_ms": 3.28,
+          "total_latency_ms": 85.34
+        },
+        {
+          "candidate_id": "CAND054",
+          "top5_job_ids": [
+            "JOB014",
+            "JOB102",
+            "JOB198",
+            "JOB190",
+            "JOB006"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 78.33,
+          "ranking_latency_ms": 4.38,
+          "total_latency_ms": 82.72
+        },
+        {
+          "candidate_id": "CAND055",
+          "top5_job_ids": [
+            "JOB111",
+            "JOB143",
+            "JOB047",
+            "JOB103",
+            "JOB127"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2,
+          "ndcg_at_5": 1.0,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 69.85,
+          "ranking_latency_ms": 2.43,
+          "total_latency_ms": 72.28
+        },
+        {
+          "candidate_id": "CAND056",
+          "top5_job_ids": [
+            "JOB096",
+            "JOB168",
+            "JOB008",
+            "JOB144",
+            "JOB024"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.2777777777777778,
+          "ndcg_at_5": 0.9278257471613418,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 134.82,
+          "ranking_latency_ms": 10.81,
+          "total_latency_ms": 145.63
+        },
+        {
+          "candidate_id": "CAND057",
+          "top5_job_ids": [
+            "JOB097",
+            "JOB145",
+            "JOB137",
+            "JOB169",
+            "JOB113"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.503545758578481,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 131.06,
+          "ranking_latency_ms": 4.08,
+          "total_latency_ms": 135.14
+        },
+        {
+          "candidate_id": "CAND058",
+          "top5_job_ids": [
+            "JOB090",
+            "JOB010",
+            "JOB034",
+            "JOB146",
+            "JOB162"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.21739130434782608,
+          "ndcg_at_5": 0.8415580415114009,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 93.79,
+          "ranking_latency_ms": 2.86,
+          "total_latency_ms": 96.65
+        },
+        {
+          "candidate_id": "CAND059",
+          "top5_job_ids": [
+            "JOB131",
+            "JOB195",
+            "JOB011",
+            "JOB003",
+            "JOB027"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.23809523809523808,
+          "ndcg_at_5": 0.867811381317105,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 82.77,
+          "ranking_latency_ms": 3.6,
+          "total_latency_ms": 86.37
+        },
+        {
+          "candidate_id": "CAND060",
+          "top5_job_ids": [
+            "JOB108",
+            "JOB012",
+            "JOB076",
+            "JOB156",
+            "JOB116"
+          ],
+          "precision_at_5": 1.0,
+          "recall_at_5": 0.3125,
+          "ndcg_at_5": 0.8357926221960373,
+          "mrr": 1.0,
+          "hit_rate_at_5": 1.0,
+          "retrieval_latency_ms": 76.13,
+          "ranking_latency_ms": 3.53,
+          "total_latency_ms": 79.66
+        }
+      ]
+    }
+  }
+}

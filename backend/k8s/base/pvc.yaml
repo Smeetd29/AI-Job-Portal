@@ -1,0 +1,14 @@
+# Optional ReadWriteMany PVC for shared FAISS index storage when using NFS or AWS EFS CSI driver.
+# Note: The default K8s deployment uses an initContainer to pull the index from S3/object storage
+# into an emptyDir volume per pod, avoiding the requirement for cluster-wide RWX storage.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: careerconnect-faiss-pvc
+  namespace: careerconnect
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

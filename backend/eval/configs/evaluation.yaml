@@ -1,0 +1,38 @@
+# Global Evaluation Configuration
+version: "1.0.0"
+
+thresholds:
+  retrieval:
+    precision_at_3: 0.60
+    precision_at_5: 0.50
+    precision_at_10: 0.35
+    recall_at_3: 0.55
+    recall_at_5: 0.70
+    recall_at_10: 0.85
+    hit_rate_at_5: 0.90
+    mrr: 0.80
+    ndcg_at_5: 0.75
+
+  recommendation:
+    precision_at_5: 0.55
+    recall_at_5: 0.70
+    ndcg_at_5: 0.75
+    mrr: 0.80
+    min_match_threshold: 50
+    max_duplicate_rate: 0.0
+
+  generation:
+    faithfulness: 0.80
+    answer_relevancy: 0.75
+    geval_quality: 0.75
+    max_hallucination_rate: 0.10
+    schema_validity: 1.0
+
+datasets:
+  jobs: "eval/datasets/golden_jobs.jsonl"
+  resumes: "eval/datasets/golden_resumes.jsonl"
+  recommendations: "eval/datasets/golden_recommendations.jsonl"
+  summaries: "eval/datasets/golden_resume_summaries.jsonl"
+
+artifacts_dir: "eval/artifacts"
+reports_dir: "eval/reports"
